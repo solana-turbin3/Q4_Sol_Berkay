@@ -7,7 +7,7 @@ pub struct StakeConfig {
     pub max_stake: u8,      // max number a user can stake
     pub freeze_period: u32, // number of days a user can't withdraw
     pub rewards_bump: u8,
-    pub stake_bump: u8, // since our stake config is a pda, we need to store that bump
+    pub bump: u8, // since our stake config is a pda, we need to store that bump
 }
 
 impl Space for StakeConfig {
