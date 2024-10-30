@@ -1,13 +1,12 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
-    associated_token::AssociatedToken,
     metadata::{
         mpl_token_metadata::instructions::{
             FreezeDelegatedAccountCpi, FreezeDelegatedAccountCpiAccounts,
         },
         MasterEditionAccount, Metadata, MetadataAccount,
     },
-    token::{approve, Approve, ApproveChecked, Mint, Token, TokenAccount},
+    token::{approve, Approve, Mint, Token, TokenAccount},
 };
 
 use crate::{StakeAccount, StakeConfig, StakeError, UserAccount};
@@ -15,7 +14,7 @@ use crate::{StakeAccount, StakeConfig, StakeError, UserAccount};
 #[derive(Accounts)]
 pub struct Stake<'info> {
     #[account(mut)]
-    pub user: Signer<'info>,
+    pub user: Signer<'info>, // person staking the nft
     pub mint: Account<'info, Mint>, // the nft that the user wants to stake
     pub collection_mint: Account<'info, Mint>, // the collection of the nft that the user wants to stake
 
@@ -33,7 +32,7 @@ pub struct Stake<'info> {
         constraint = metadata.collection.as_ref().unwrap().key.as_ref()==collection_mint.key().as_ref(),
         constraint = metadata.collection.as_ref().unwrap().verified == true,
     )]
-    pub metadata: Account<'info, MetadataAccount>, // that account is on created on the metadata program actually, that's why we need to add its seeds
+    pub metadata: Account<'info, MetadataAccount>, // that account is on created on the metadata program actually, that's why we need to add its seeds. That account is owned by the metaplex metadata program
 
     #[account(
         seeds = [b"metadata".as_ref(),metadata_program.key().as_ref(),mint.key().as_ref(),b"edition"],

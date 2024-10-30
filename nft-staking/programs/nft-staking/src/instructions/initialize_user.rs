@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 use crate::state::UserAccount;
 
 #[derive(Accounts)]
-pub struct Initialize<'info> {
+pub struct InitializeUser<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     #[account(
@@ -18,8 +18,8 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-impl<'info> Initialize<'info> {
-    pub fn initialize_user_account(&mut self, bump: &InitializeBumps) -> Result<()> {
+impl<'info> InitializeUser<'info> {
+    pub fn initialize_user_account(&mut self, bump: &InitializeUserBumps) -> Result<()> {
         self.user_account.set_inner(UserAccount {
             points: 0,
             amount_staked: 0,
