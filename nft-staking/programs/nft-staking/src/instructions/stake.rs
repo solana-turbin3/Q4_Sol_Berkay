@@ -84,7 +84,7 @@ impl<'info> Stake<'info> {
         };
         let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
 
-        approve(cpi_ctx, 1)?; // the authority will be delegated to the stake account, then the stake account can sign the freeze delegated account cpi
+        approve(cpi_ctx, 1)?; // the authority will be delegated to the stake account, then the stake account can sign to freeze delegated account cpi. While unfreezing, the stake account will be able to sign to unfreeze delegated account cpi
 
         let delegate = &self.stake_account.to_account_info();
         let token_account = &self.mint_ata.to_account_info();
