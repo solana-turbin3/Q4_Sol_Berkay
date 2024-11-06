@@ -33,7 +33,7 @@ pub struct Initialize<'info> {
         mint::decimals=6,
         mint::authority=marketplace
     )]
-    pub rewards_mint: InterfaceAccount<'info, Mint>, //TODO: check why do we need that rewards_mint
+    pub rewards_mint: InterfaceAccount<'info, Mint>, // when a user buys an nft, the marketplace will mint a reward token to the user
 
     pub system_program: Program<'info, System>,
     pub token_program: Interface<'info, TokenInterface>,

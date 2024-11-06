@@ -7,7 +7,7 @@ use crate::state::{Listing, Marketplace};
 
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{transfer_checked, TransferChecked},
+    token::{close_account, transfer_checked, CloseAccount, TransferChecked},
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
@@ -120,4 +120,28 @@ impl<'info> Purchase<'info> {
     // mint rewards (choose whatever amount and ratio)
 
     // close mint vault
+    pub fn close_mint_vault(&mut self) -> Result<()> {
+        let seed = &[
+            &self.marketplace.key().to_bytes()[..],
+            &self.maker_mint.key().to_bytes()[..],
+            &[self.listing.bump],
+        ];
+        let signer_seeds = &[&seed[..]];
+
+        let accounts = CloseAccount {
+            account: self.vault.to_account_info(),
+            destination: self.maker.to_account_info(),
+            authority: self.listing.to_account_info(),
+        };
+
+        let cpi_ctx = CpiContext::new_with_signer(
+            self.token_program.to_account_info(),
+            accounts,
+            signer_seeds,
+        );
+
+        close_account(cpi_ctx)?;
+
+        Ok(())
+    }
 }

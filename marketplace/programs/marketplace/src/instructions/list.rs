@@ -58,9 +58,9 @@ pub struct List<'info> {
         constraint = metadata.collection.as_ref().unwrap().key.as_ref()==collection_mint.key().as_ref(),
         constraint = metadata.collection.as_ref().unwrap().verified == true
     )]
-    pub metadata: Account<'info, MetadataAccount>, // the metadata account of the nft
+    pub metadata: Account<'info, MetadataAccount>, // the metadata account of the nft, it will be used to check if the nft is part of a collection and if it is verified
 
-    pub master_edition: Account<'info, MasterEditionAccount>, // the master edition account of the nft
+    pub master_edition: Account<'info, MasterEditionAccount>, // the master edition account of the nft, it will be used to check if the nft is a master edition and the total supply is 1 and decimals are 0 for the token mint (nft).
 
     pub token_program: Interface<'info, TokenInterface>,
     pub associated_token_program: Program<'info, AssociatedToken>,
@@ -81,6 +81,7 @@ impl<'info> List<'info> {
 
     pub fn deposit_nft(&mut self) -> Result<()> {
         let cpi_program = self.metadata_program.to_account_info();
+        // When a user lists an nft, the nft will be deposited to the vault. Remember, the authority of the vault will be set to the listing account. All other cases in which transffering from vault to somewhere, listing account is required since it has authority over the vault.
         let cpi_accounts = TransferChecked {
             from: self.maker_ata.to_account_info(),
             to: self.vault.to_account_info(),
